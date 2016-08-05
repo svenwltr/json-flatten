@@ -4,7 +4,9 @@ REPO=github.com/svenwltr/json-flatten
 
 VERSION=$(shell git describe --always --dirty | tr '-' '.' )
 
-all: test build
+all: test build cov
+
+bootstrap: tools deps
 
 clean:
 	rm -rf target vendor
@@ -28,6 +30,6 @@ tools:
 	go get gopkg.in/matm/v1/gocov-html
 	go get github.com/axw/gocov/gocov
 
-cov: deps
+cov: deps tools
 	gocov test $(shell glide nv) \
 		| gocov-html > target/coverage.html
