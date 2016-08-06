@@ -3,8 +3,12 @@
 REPO=github.com/svenwltr/json-flatten
 
 VERSION=$(shell git describe --always --dirty | tr '-' '.' )
+BUILDOPTS=-ldflags "-X main.version=$(VERSION)" \
 
-all: test build cov
+usage:
+	@echo "USAGE: make [all] [bootstrap] [clean] [test] [build] [install] [cov] [cc]"
+	
+all: bootstrap test build cov cc
 
 bootstrap: tools deps
 
@@ -23,8 +27,11 @@ test: deps
 build: deps
 	mkdir -p target
 	go build \
-		-ldflags "-X main.version=$(VERSION)" \
+		$(BUILDOPTS) \
 		-o target/json-flatten
+
+install: test
+	go install $(BUILDOPTS)
 
 tools:
 	go get gopkg.in/matm/v1/gocov-html
@@ -33,3 +40,8 @@ tools:
 cov: deps tools
 	gocov test $(shell glide nv) \
 		| gocov-html > target/coverage.html
+
+cc: test
+	mkdir -p target
+	GOOS=linux GOARCH=amd64 go build $(BUILD_OPTS) -o target/json-flatten-$(VERSION)-linux-amd64
+	GOOS=darwin GOARCH=amd64 go build $(BUILD_OPTS) -o target/json-flatten-$(VERSION)-darwin-amd64
