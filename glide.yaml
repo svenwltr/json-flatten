@@ -1,2 +1,4 @@
 package: github.com/svenwltr/json-flatten
-import: []
+import:
+- package: github.com/aryann/difflib
+  version: 035af7c09b120b0909dd998c92745b82f61e0b1c

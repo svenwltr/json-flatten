@@ -2,67 +2,42 @@ package main
 
 import (
 	"fmt"
-	"io"
-	"strings"
+	"sort"
 )
 
-type Assignments []Assignment
+type ByPath Assignments
 
-func (a Assignments) PrintTo(w io.Writer) {
-	for _, assignment := range a {
-		assignment.PrintTo(w)
-		fmt.Fprint(w, "\n")
-	}
+func (a ByPath) Len() int {
+	return len(a)
 }
 
-type Assignment struct {
-	Path  []Key
-	Value interface{}
+func (a ByPath) Less(i, j int) bool {
+	return fmt.Sprint(a[i].Path) < fmt.Sprint(a[j].Path)
 }
 
-func (a Assignment) PrintTo(w io.Writer) {
-	keys := make([]string, len(a.Path))
-	for i, key := range a.Path {
-		keys[i] = key.String()
-	}
-	fmt.Fprintf(w, "%s: %v",
-		strings.Join(keys, "."),
-		a.Value)
-}
-
-type Key interface {
-	String() string
-}
-
-type ObjectName string
-
-func (o ObjectName) String() string {
-	return string(o)
-}
-
-type ArrayIndex int
-
-func (i ArrayIndex) String() string {
-	return fmt.Sprintf("%d", i)
+func (a ByPath) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
 }
 
 func Flatten(data interface{}) Assignments {
-	return flatten([]Key{}, data)
+	a := flatten([]Name{}, data)
+	sort.Sort(ByPath(a))
+	return a
 }
 
-func flatten(path []Key, value interface{}) Assignments {
+func flatten(path []Name, value interface{}) Assignments {
 	switch value := value.(type) {
 	case map[string]interface{}:
 		return flattenMap(path, value)
 	case []interface{}:
 		return flattenArray(path, value)
 	default:
-		return Assignments{Assignment{path, value}}
+		return Assignments{&Assignment{path, value}}
 		//panic(fmt.Sprintf("Unknown type: %#v", value))
 	}
 }
 
-func flattenMap(path []Key, value map[string]interface{}) Assignments {
+func flattenMap(path []Name, value map[string]interface{}) Assignments {
 	out := make(Assignments, 0)
 	for k, v := range value {
 		p := append(path, ObjectName(k))
@@ -72,7 +47,7 @@ func flattenMap(path []Key, value map[string]interface{}) Assignments {
 	return out
 }
 
-func flattenArray(path []Key, value []interface{}) Assignments {
+func flattenArray(path []Name, value []interface{}) Assignments {
 	out := make(Assignments, 0)
 	for i, v := range value {
 		p := append(path, ArrayIndex(i))

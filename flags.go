@@ -12,22 +12,20 @@ type Config struct {
 	Input   *string
 }
 
-func parseCommandLine() Config {
+func (app *Application) GetConfig() Config {
 	config := Config{}
 
 	fs := flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 	fs.BoolVar(&config.Help, "h", false, "")
 	fs.BoolVar(&config.Version, "v", false, "")
 
-	err := fs.Parse(os.Args[1:])
+	err := fs.Parse(app.Args[1:])
 	if err != nil || config.Help {
-		printUsage()
-		os.Exit(2)
+		app.Usage()
 	}
 
 	if fs.NArg() > 1 {
-		printUsage()
-		os.Exit(2)
+		app.Usage()
 	}
 
 	if fs.NArg() == 1 {
@@ -38,6 +36,7 @@ func parseCommandLine() Config {
 	return config
 }
 
-func printUsage() {
-	fmt.Fprintf(os.Stderr, "Usage: %s [-v] [-h] [file]\n", os.Args[0])
+func (app *Application) Usage() {
+	fmt.Fprintf(app.Stderr, "Usage: %s [-v] [-h] [file]\n", app.Args[0])
+	app.Exit(ExitUsage)
 }

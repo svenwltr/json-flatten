@@ -1,0 +1,13 @@
+42=13.37
+a.b.c=d
+blub=0
+foo=bar
+list[0]=<nil>
+list[1]=0
+list[2]=42
+list[3]=13.37
+list[4][0]=a
+list[4][1]=b
+list[5].bim=baz
+list[5].foo=bar
+nope=<nil>

@@ -1,4 +1,6 @@
-hash: 4fd112847980803b8c68f4428b61aad913b9d362c706d8fd0133fe234a40849b
-updated: 2016-08-05T11:35:55.662892665+02:00
-imports: []
+hash: dfcf37ac1f9147189f1c36b27dca0d709e2b97e3f5db5711fca11881a6e23843
+updated: 2016-08-06T15:34:03.952264046+02:00
+imports:
+- name: github.com/aryann/difflib
+  version: 035af7c09b120b0909dd998c92745b82f61e0b1c
 devImports: []

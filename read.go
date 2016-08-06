@@ -5,20 +5,20 @@ import (
 	"os"
 )
 
-func read(filename *string) interface{} {
-	input := os.Stdin
+func (app *Application) Read(filename *string) interface{} {
+	input := app.Stdin
 
 	if filename != nil {
 		var err error
 		input, err = os.Open(*filename)
-		AssertNoError(err)
+		app.AssertNoError(err)
 	}
 
 	var data interface{}
 
 	decoder := json.NewDecoder(input)
 	err := decoder.Decode(&data)
-	AssertNoError(err)
+	app.AssertNoError(err)
 
 	return data
 }
