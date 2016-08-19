@@ -10,4 +10,14 @@ install:
   - make bootstrap
 
 script:
-  - make test
+  - make cc
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_API_KEY
+  file:
+  - "target/json-flatten-linux-amd64"
+  - "target/json-flatten-darwin-amd64"
+  skip_cleanup: true
+  on:
+    tags: true
