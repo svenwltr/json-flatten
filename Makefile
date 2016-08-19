@@ -43,5 +43,5 @@ cov: deps tools
 
 cc: test
 	mkdir -p target
-	GOOS=linux GOARCH=amd64 go build $(BUILD_OPTS) -o target/json-flatten-$(VERSION)-linux-amd64
-	GOOS=darwin GOARCH=amd64 go build $(BUILD_OPTS) -o target/json-flatten-$(VERSION)-darwin-amd64
+	GOOS=linux GOARCH=amd64 go build $(BUILD_OPTS) -o target/json-flatten-linux-amd64
+	GOOS=darwin GOARCH=amd64 go build $(BUILD_OPTS) -o target/json-flatten-darwin-amd64
